@@ -1,0 +1,183 @@
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.loading-indicator.inline {
+  display: inline-flex;
+}
+
+.loading-text {
+  font-size: 0.9rem;
+  color: inherit;
+  white-space: nowrap;
+}
+
+/* Spinner variant */
+.spinner-container .spinner {
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-container.small .spinner {
+  width: 1rem;
+  height: 1rem;
+}
+
+.spinner-container.medium .spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.spinner-container.large .spinner {
+  width: 2rem;
+  height: 2rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dots variant */
+.dots-container .dots {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.dots-container .dot {
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: pulse-dot 1.4s ease-in-out infinite both;
+}
+
+.dots-container.small .dot {
+  width: 0.375rem;
+  height: 0.375rem;
+}
+
+.dots-container.medium .dot {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.dots-container.large .dot {
+  width: 0.625rem;
+  height: 0.625rem;
+}
+
+.dots-container .dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.dots-container .dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.dots-container .dot:nth-child(3) {
+  animation-delay: 0s;
+}
+
+@keyframes pulse-dot {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Pulse variant */
+.pulse-container .pulse {
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: pulse-scale 1s ease-in-out infinite;
+}
+
+.pulse-container.small .pulse {
+  width: 1rem;
+  height: 1rem;
+}
+
+.pulse-container.medium .pulse {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.pulse-container.large .pulse {
+  width: 2rem;
+  height: 2rem;
+}
+
+@keyframes pulse-scale {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Color variants */
+.loading-indicator.primary {
+  color: #007bff;
+}
+
+.loading-indicator.secondary {
+  color: #6c757d;
+}
+
+.loading-indicator.white {
+  color: #fff;
+}
+
+.loading-indicator.inherit {
+  color: inherit;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .spinner,
+  .dot,
+  .pulse {
+    animation: none;
+  }
+  
+  .spinner {
+    border-top-color: currentColor;
+    border-right-color: currentColor;
+  }
+  
+  .dot {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  
+  .pulse {
+    opacity: 0.7;
+    transform: scale(0.8);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .loading-indicator.primary {
+    color: #4da6ff;
+  }
+  
+  .loading-indicator.secondary {
+    color: #adb5bd;
+  }
+}

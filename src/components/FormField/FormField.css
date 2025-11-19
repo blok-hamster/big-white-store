@@ -1,0 +1,250 @@
+.form-field {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-field-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.required-indicator {
+  color: #e74c3c;
+  margin-left: 0.25rem;
+  font-weight: 600;
+}
+
+.form-field-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-field-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.form-field-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  background-color: #fff;
+}
+
+.form-field-input.error {
+  border-color: #e74c3c;
+  background-color: #fdf2f2;
+}
+
+.form-field-input.error:focus {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.25);
+}
+
+.form-field-input:disabled {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-field-input::placeholder {
+  color: #999;
+  opacity: 1;
+}
+
+.password-toggle-button {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.password-toggle-button:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.password-toggle-button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.password-toggle-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.password-toggle-icon {
+  font-size: 1rem;
+  line-height: 1;
+  color: #666;
+}
+
+.password-toggle-button:hover:not(:disabled) .password-toggle-icon {
+  color: #333;
+}
+
+.form-field-error {
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25rem;
+  color: #e74c3c;
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+.error-icon {
+  font-size: 0.7rem;
+  margin-top: 0.1rem;
+  flex-shrink: 0;
+}
+
+.error-text {
+  flex: 1;
+}
+
+/* Focus states */
+.form-field.is-focused .form-field-label {
+  color: #007bff;
+}
+
+.form-field.has-error .form-field-label {
+  color: #e74c3c;
+}
+
+.form-field.has-error.is-focused .form-field-label {
+  color: #e74c3c;
+}
+
+/* Loading state */
+.form-field.is-loading .form-field-input {
+  background-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.04), transparent);
+  background-size: 200px 100%;
+  background-repeat: no-repeat;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .form-field-input {
+    padding: 0.625rem;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .password-toggle-button {
+    right: 0.625rem;
+    padding: 0.375rem;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .form-field-input,
+  .password-toggle-button {
+    transition: none;
+  }
+  
+  .form-field.is-loading .form-field-input {
+    animation: none;
+    background-image: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .form-field-input {
+    border-width: 2px;
+  }
+  
+  .form-field-input:focus {
+    border-width: 3px;
+  }
+  
+  .form-field-error {
+    font-weight: 600;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .form-field-label {
+    color: #e0e0e0;
+  }
+  
+  .form-field-input {
+    background-color: #2a2a2a;
+    border-color: #404040;
+    color: #e0e0e0;
+  }
+  
+  .form-field-input:focus {
+    background-color: #333;
+    border-color: #007bff;
+  }
+  
+  .form-field-input.error {
+    background-color: #2a1a1a;
+    border-color: #e74c3c;
+  }
+  
+  .form-field-input:disabled {
+    background-color: #1a1a1a;
+    color: #888;
+  }
+  
+  .form-field-input::placeholder {
+    color: #888;
+  }
+  
+  .password-toggle-icon {
+    color: #b0b0b0;
+  }
+  
+  .password-toggle-button:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .password-toggle-button:hover:not(:disabled) .password-toggle-icon {
+    color: #e0e0e0;
+  }
+  
+  .form-field.is-focused .form-field-label {
+    color: #4da6ff;
+  }
+  
+  .form-field.has-error .form-field-label {
+    color: #ff6b6b;
+  }
+}

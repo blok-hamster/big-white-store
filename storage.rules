@@ -1,0 +1,81 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper functions for role-based access control
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function validateImageFile(resource) {
+      return resource != null &&
+        resource.contentType != null &&
+        resource.contentType.matches('image/.*') &&
+        resource.contentType in ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    }
+    
+    // Product images - public read, admin write with validation
+    match /products/{allPaths=**} {
+      allow read: if true; // Public read access for product images
+      allow write: if isAdmin() && 
+        validateImageFile(request.resource) &&
+        request.resource.size < 5 * 1024 * 1024; // 5MB limit
+      allow delete: if isAdmin();
+    }
+    
+    // Category images - public read, admin write with validation
+    match /categories/{allPaths=**} {
+      allow read: if true; // Public read access for category images
+      allow write: if isAdmin() && 
+        validateImageFile(request.resource) &&
+        request.resource.size < 2 * 1024 * 1024; // 2MB limit
+      allow delete: if isAdmin();
+    }
+    
+    // User profile images - public read, owner/admin write
+    match /users/{userId}/profile/{allPaths=**} {
+      allow read: if true; // Public read for profile images
+      allow write: if (isOwner(userId) || isAdmin()) && 
+        validateImageFile(request.resource) &&
+        request.resource.size < 1 * 1024 * 1024; // 1MB limit
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+    
+    // User private files - owner and admin access only
+    match /users/{userId}/private/{allPaths=**} {
+      allow read, write: if isOwner(userId) || isAdmin();
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+    
+    // User general uploads (backwards compatibility)
+    match /users/{userId}/{allPaths=**} {
+      allow read, write: if isOwner(userId) || isAdmin();
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+    
+    // System files - admin only
+    match /system/{allPaths=**} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Temporary uploads - authenticated users only
+    match /temp/{userId}/{allPaths=**} {
+      allow read, write: if isOwner(userId) && 
+        request.resource.size < 10 * 1024 * 1024; // 10MB limit for temp files
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+    
+    // Default deny all other access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

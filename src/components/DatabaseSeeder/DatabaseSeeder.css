@@ -1,0 +1,270 @@
+.database-seeder {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.seeder-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.seeder-header h2 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.seeder-header p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+.seeder-content {
+  margin-bottom: 2rem;
+}
+
+.seeding-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+}
+
+.seeding-step {
+  font-size: 1.1rem;
+  color: #495057;
+  text-align: center;
+  margin: 0;
+}
+
+.seeder-info {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid #e9ecef;
+}
+
+.seeder-info h3 {
+  margin: 0 0 1rem 0;
+  color: #495057;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.seeder-info ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.seeder-info li {
+  margin-bottom: 0.75rem;
+  color: #495057;
+}
+
+.admin-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #007bff;
+}
+
+.seeder-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.btn-warning {
+  background: #ffc107;
+  color: #212529;
+}
+
+.btn-warning:hover:not(:disabled) {
+  background: #e0a800;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #545b62;
+}
+
+.seeding-success {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.seeding-success h3 {
+  margin: 0 0 1rem 0;
+  color: #155724;
+  font-size: 1.5rem;
+}
+
+.seeding-success p {
+  margin: 0 0 1rem 0;
+  color: #155724;
+}
+
+.admin-login-info {
+  background: white;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #c3e6cb;
+  margin-top: 1rem;
+}
+
+.admin-login-info h4 {
+  margin: 0 0 0.75rem 0;
+  color: #155724;
+  font-size: 1.125rem;
+}
+
+.admin-login-info p {
+  margin: 0.5rem 0;
+  color: #155724;
+}
+
+.admin-login-info code {
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  color: #007bff;
+  border: 1px solid #e9ecef;
+}
+
+.admin-login-info a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.admin-login-info a:hover {
+  text-decoration: underline;
+}
+
+.seeder-warnings {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.seeder-warnings h4 {
+  margin: 0 0 1rem 0;
+  color: #856404;
+  font-size: 1.125rem;
+}
+
+.seeder-warnings ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.seeder-warnings li {
+  margin-bottom: 0.5rem;
+  color: #856404;
+  font-size: 0.9rem;
+}
+
+.seeder-warnings strong {
+  color: #6c4a00;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .database-seeder {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .seeder-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .seeder-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .admin-credentials {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .database-seeder {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+
+  .seeder-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .seeder-info,
+  .seeding-success,
+  .seeder-warnings {
+    padding: 1rem;
+  }
+
+  .seeding-progress {
+    padding: 2rem 1rem;
+  }
+}

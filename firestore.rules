@@ -1,0 +1,201 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions for role-based access control
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+    
+    function isSuperAdmin() {
+      return isAuthenticated() && 
+        request.auth.token.admin == true && 
+        request.auth.token.role == 'super_admin';
+    }
+    
+    function hasPermission(permission) {
+      return isAuthenticated() && 
+        request.auth.token.admin == true &&
+        (request.auth.token.role == 'super_admin' || 
+         permission in request.auth.token.permissions);
+    }
+    
+    function isOwnerOrAdmin(userId) {
+      return isAuthenticated() && 
+        (request.auth.uid == userId || isAdmin());
+    }
+    
+    // Products collection - public read, admin write with audit logging
+    match /products/{productId} {
+      allow read: if true;
+      allow create: if isAdmin() && 
+        validateProductData(request.resource.data) &&
+        request.resource.data.createdAt == request.time &&
+        request.resource.data.updatedAt == request.time;
+      allow update: if isAdmin() && 
+        validateProductUpdate(request.resource.data) &&
+        request.resource.data.updatedAt == request.time;
+      allow delete: if isAdmin();
+      
+      function validateProductData(data) {
+        return data.keys().hasAll(['name', 'categoryId', 'subcategoryId', 'price', 'description', 'inStock', 'stockCount']) &&
+          data.name is string && data.name.size() > 0 &&
+          data.categoryId is string && data.categoryId.size() > 0 &&
+          data.subcategoryId is string && data.subcategoryId.size() > 0 &&
+          data.price is number && data.price > 0 &&
+          data.description is string && data.description.size() > 0 &&
+          data.inStock is bool &&
+          data.stockCount is number && data.stockCount >= 0;
+      }
+      
+      function validateProductUpdate(data) {
+        return data.updatedAt == request.time &&
+          (!('price' in data) || (data.price is number && data.price > 0)) &&
+          (!('stockCount' in data) || (data.stockCount is number && data.stockCount >= 0)) &&
+          (!('name' in data) || (data.name is string && data.name.size() > 0));
+      }
+    }
+    
+    // Categories collection - public read, admin write with validation
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create: if isAdmin() && 
+        validateCategoryData(request.resource.data) &&
+        request.resource.data.createdAt == request.time &&
+        request.resource.data.updatedAt == request.time;
+      allow update: if isAdmin() && 
+        request.resource.data.updatedAt == request.time;
+      allow delete: if isAdmin();
+      
+      function validateCategoryData(data) {
+        return data.keys().hasAll(['name', 'displayOrder']) &&
+          data.name is string && data.name.size() > 0 &&
+          data.displayOrder is number && data.displayOrder >= 0;
+      }
+    }
+    
+    // User profiles collection - role-based access with validation
+    match /userProfiles/{userId} {
+      allow read: if isOwnerOrAdmin(userId);
+      allow create: if isAuthenticated() && 
+        request.auth.uid == userId &&
+        validateUserProfileData(request.resource.data) &&
+        request.resource.data.createdAt == request.time &&
+        request.resource.data.updatedAt == request.time;
+      allow update: if isAdmin() && 
+        validateUserProfileUpdate(request.resource.data) &&
+        request.resource.data.updatedAt == request.time;
+      allow delete: if isSuperAdmin();
+      
+      function validateUserProfileData(data) {
+        return data.keys().hasAll(['email', 'displayName', 'role', 'isActive']) &&
+          data.email is string && data.email.size() > 0 &&
+          data.displayName is string && data.displayName.size() > 0 &&
+          data.role in ['user', 'admin', 'super_admin'] &&
+          data.isActive is bool;
+      }
+      
+      function validateUserProfileUpdate(data) {
+        return data.updatedAt == request.time &&
+          (!('role' in data) || data.role in ['user', 'admin', 'super_admin']) &&
+          (!('email' in data) || (data.email is string && data.email.size() > 0)) &&
+          (!('displayName' in data) || (data.displayName is string && data.displayName.size() > 0));
+      }
+    }
+    
+    // Admin logs collection - admin read access, system write access
+    match /adminLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() && 
+        validateAuditLogData(request.resource.data) &&
+        request.resource.data.timestamp == request.time;
+      allow update, delete: if false; // Audit logs should be immutable
+      
+      function validateAuditLogData(data) {
+        return data.keys().hasAll(['adminId', 'action', 'targetType', 'targetId']) &&
+          data.adminId is string && data.adminId.size() > 0 &&
+          data.action is string && data.action.size() > 0 &&
+          data.targetType in ['user', 'product', 'category'] &&
+          data.targetId is string && data.targetId.size() > 0;
+      }
+    }
+    
+    // Password reset tokens collection - system access only
+    match /passwordResetTokens/{tokenId} {
+      allow read: if false; // Tokens should not be readable by clients
+      allow create: if isAuthenticated() && 
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.createdAt == request.time;
+      allow update: if false; // Tokens should be immutable
+      allow delete: if false; // Let tokens expire naturally
+    }
+    
+    // User-specific data collections with enhanced security
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+      
+      // User preferences subcollection
+      match /preferences/{document} {
+        allow read, write: if isAuthenticated() && request.auth.uid == userId;
+      }
+      
+      // User activity subcollection (admin readable for analytics)
+      match /activity/{document} {
+        allow read: if isOwnerOrAdmin(userId);
+        allow write: if isAuthenticated() && request.auth.uid == userId;
+      }
+    }
+    
+    // Cart items collection with enhanced validation
+    match /cartItems/{itemId} {
+      allow read, write: if isAuthenticated() && 
+        request.auth.uid == resource.data.userId;
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId &&
+        validateCartItemData(request.resource.data);
+      
+      function validateCartItemData(data) {
+        return data.keys().hasAll(['userId', 'productId', 'quantity']) &&
+          data.userId is string && data.userId == request.auth.uid &&
+          data.productId is string && data.productId.size() > 0 &&
+          data.quantity is number && data.quantity > 0;
+      }
+    }
+    
+    // Wishlist items collection with enhanced validation
+    match /wishlistItems/{itemId} {
+      allow read, write: if isAuthenticated() && 
+        request.auth.uid == resource.data.userId;
+      allow create: if isAuthenticated() && 
+        request.auth.uid == request.resource.data.userId &&
+        validateWishlistItemData(request.resource.data);
+      
+      function validateWishlistItemData(data) {
+        return data.keys().hasAll(['userId', 'productId']) &&
+          data.userId is string && data.userId == request.auth.uid &&
+          data.productId is string && data.productId.size() > 0;
+      }
+    }
+    
+    // System configuration collection - super admin only
+    match /systemConfig/{configId} {
+      allow read: if isAdmin();
+      allow write: if isSuperAdmin();
+    }
+    
+    // Analytics and metrics collection - admin read only
+    match /analytics/{document} {
+      allow read: if isAdmin();
+      allow write: if false; // System-generated only
+    }
+    
+    // Default deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

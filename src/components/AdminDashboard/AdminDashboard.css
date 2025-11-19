@@ -1,0 +1,180 @@
+/* Admin Dashboard Layout Styles */
+.admin-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+  position: relative;
+}
+
+.admin-dashboard.loading {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.admin-dashboard.loading p {
+  margin-top: 1rem;
+  color: #666;
+  font-size: 1rem;
+}
+
+/* Mobile Menu Button */
+.mobile-menu-button {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  background: #1a1a1a;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-button:hover {
+  background: #2a2a2a;
+}
+
+.hamburger-line {
+  width: 20px;
+  height: 2px;
+  background: white;
+  border-radius: 1px;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-button[aria-expanded="true"] .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.mobile-menu-button[aria-expanded="true"] .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-button[aria-expanded="true"] .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Main Content Area */
+.admin-main-content {
+  flex: 1;
+  margin-left: 280px;
+  min-height: 100vh;
+  background: #f8fafc;
+  transition: margin-left 0.3s ease;
+}
+
+.content-wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Placeholder Sections */
+.placeholder-section {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.placeholder-section h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.placeholder-section p {
+  margin: 0;
+  font-size: 1rem;
+  color: #666;
+  background: white;
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .mobile-menu-button {
+    display: flex;
+  }
+
+  .admin-main-content {
+    margin-left: 0;
+    padding-top: 4rem; /* Space for mobile menu button */
+  }
+
+  .placeholder-section {
+    padding: 1rem;
+  }
+
+  .placeholder-section h1 {
+    font-size: 1.5rem;
+  }
+
+  .placeholder-section p {
+    padding: 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Tablet Responsive */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .admin-main-content {
+    margin-left: 240px;
+  }
+}
+
+/* Loading State */
+.admin-dashboard.loading .loading-indicator {
+  margin-bottom: 1rem;
+}
+
+/* Focus styles for accessibility */
+.mobile-menu-button:focus {
+  outline: 2px solid #4f9eff;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .admin-dashboard {
+    background: #fff;
+  }
+  
+  .admin-main-content {
+    background: #fff;
+  }
+  
+  .mobile-menu-button {
+    border: 2px solid #fff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .admin-main-content,
+  .mobile-menu-button,
+  .hamburger-line {
+    transition: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .mobile-menu-button {
+    display: none;
+  }
+  
+  .admin-main-content {
+    margin-left: 0;
+    padding-top: 0;
+  }
+}
