@@ -107,13 +107,13 @@
 .category-button:hover,
 .topic-button:hover {
   background-color: rgba(0, 123, 255, 0.1);
-  color: #007bff;
+  color: #000000;
 }
 
 .contextual-help-button.active,
 .category-button.active,
 .topic-button.active {
-  background-color: #007bff;
+  background-color: #000000;
   color: white;
 }
 
@@ -148,7 +148,7 @@
 
 .help-search-input:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #000000;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
@@ -181,7 +181,7 @@
 }
 
 .topic-content h3 {
-  color: #007bff;
+  color: #000000;
   margin-bottom: 1rem;
   font-size: 1.5rem;
   font-weight: 600;
@@ -245,7 +245,7 @@
 .related-topic-link {
   background: none;
   border: none;
-  color: #007bff;
+  color: #000000;
   cursor: pointer;
   text-decoration: underline;
   font-size: 0.9rem;
@@ -253,7 +253,7 @@
 }
 
 .related-topic-link:hover {
-  color: #0056b3;
+  color: #333333;
 }
 
 .help-welcome {

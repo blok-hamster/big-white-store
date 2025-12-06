@@ -265,8 +265,8 @@ export class CategoryService {
       // Validate admin permissions
       await adminService.validateAdminPermission('write:categories');
 
-      // Get existing category
-      const existingCategory = await this.getCategoryById(categoryId);
+      // Get existing category (verifies it exists)
+      await this.getCategoryById(categoryId);
 
       // Prepare update data
       const updateData: any = {

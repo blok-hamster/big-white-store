@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import { authService } from '../../services/AuthService';
 import { UserFriendlyError } from '../../types';
 import { useNotification } from '../../hooks';
@@ -179,7 +180,7 @@ const SignupForm: React.FC<SignupFormProps> = ({
   const handleFieldBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const fieldName = name as keyof FormData;
-    
+
     const error = validateField(fieldName, value);
     setErrors(prev => ({
       ...prev,
@@ -190,7 +191,7 @@ const SignupForm: React.FC<SignupFormProps> = ({
   // Validate entire form
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
-    
+
     Object.keys(formData).forEach(key => {
       const fieldName = key as keyof FormData;
       const error = validateField(fieldName, formData[fieldName]);
@@ -206,7 +207,7 @@ const SignupForm: React.FC<SignupFormProps> = ({
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -224,27 +225,27 @@ const SignupForm: React.FC<SignupFormProps> = ({
       // Success handling
       const successMessage = 'Account created successfully! Please check your email to verify your account.';
       showSuccess(successMessage);
-      
+
       if (onSignupSuccess) {
         onSignupSuccess();
       } else {
         // Default behavior: redirect to signin page
-        navigate('/signin', { 
-          state: { 
+        navigate('/signin', {
+          state: {
             message: 'Account created! Please sign in with your new credentials.',
-            email: formData.email 
+            email: formData.email
           }
         });
       }
 
     } catch (error) {
-      const errorMessage = error instanceof UserFriendlyError 
-        ? error.userMessage 
+      const errorMessage = error instanceof UserFriendlyError
+        ? error.userMessage
         : 'Failed to create account. Please try again.';
-      
+
       setErrors({ general: errorMessage });
       showError(errorMessage);
-      
+
       if (onSignupError) {
         onSignupError(errorMessage);
       }
@@ -255,10 +256,10 @@ const SignupForm: React.FC<SignupFormProps> = ({
 
   const passwordStrength = calculatePasswordStrength(formData.password);
   const hasFormErrors = Object.values(errors).some(error => error !== undefined);
-  const isFormValid = !hasFormErrors && 
-    formData.email && 
-    formData.password && 
-    formData.confirmPassword && 
+  const isFormValid = !hasFormErrors &&
+    formData.email &&
+    formData.password &&
+    formData.confirmPassword &&
     formData.displayName;
 
   return (
@@ -354,15 +355,15 @@ const SignupForm: React.FC<SignupFormProps> = ({
               disabled={isSubmitting}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-              {showPassword ? '👁️' : '👁️‍🗨️'}
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
-          
+
           {/* Password Strength Indicator */}
           {formData.password && (
             <div id="password-strength" className="password-strength">
               <div className="strength-bar">
-                <div 
+                <div
                   className={`strength-fill ${getPasswordStrengthClass(passwordStrength)}`}
                   style={{ width: `${(passwordStrength / 4) * 100}%` }}
                 />
@@ -372,7 +373,7 @@ const SignupForm: React.FC<SignupFormProps> = ({
               </span>
             </div>
           )}
-          
+
           {errors.password && (
             <div id="password-error" className="error-message" role="alert">
               {errors.password}
@@ -407,7 +408,7 @@ const SignupForm: React.FC<SignupFormProps> = ({
               disabled={isSubmitting}
               aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
             >
-              {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
           {errors.confirmPassword && (

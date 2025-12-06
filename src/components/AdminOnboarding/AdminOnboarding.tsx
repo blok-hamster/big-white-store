@@ -27,12 +27,14 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
   const [currentStep, setCurrentStep] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useLocalStorage(
-    `admin-onboarding-${user.uid}`, 
+    `admin-onboarding-${user?.uid || 'unknown'}`,
     false
   );
 
   // Check if user should see onboarding
   useEffect(() => {
+    if (!user) return;
+
     if (!hasCompletedOnboarding) {
       // Show onboarding after a short delay
       const timer = setTimeout(() => {
@@ -41,7 +43,12 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
 
       return () => clearTimeout(timer);
     }
-  }, [hasCompletedOnboarding]);
+  }, [hasCompletedOnboarding, user]);
+
+  // Don't render if no user
+  if (!user) {
+    return null;
+  }
 
   const onboardingSteps: OnboardingStep[] = [
     {
@@ -53,7 +60,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
           <div className="welcome-icon">🎉</div>
           <h3>Welcome, {user.displayName || user.email}!</h3>
           <p>
-            You now have admin access to the dashboard. This onboarding will help you 
+            You now have admin access to the dashboard. This onboarding will help you
             get familiar with the key features and best practices.
           </p>
           <div className="welcome-features">
@@ -85,7 +92,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
         <div className="onboarding-navigation">
           <h3>Getting Around</h3>
           <p>The admin dashboard is organized into several key sections:</p>
-          
+
           <div className="nav-sections-guide">
             <div className="nav-item-guide">
               <span className="nav-icon-guide">📊</span>
@@ -94,7 +101,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
                 <p>Dashboard with key metrics and recent activity</p>
               </div>
             </div>
-            
+
             <div className="nav-item-guide">
               <span className="nav-icon-guide">📦</span>
               <div>
@@ -102,7 +109,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
                 <p>Create, edit, and manage your product catalog</p>
               </div>
             </div>
-            
+
             <div className="nav-item-guide">
               <span className="nav-icon-guide">🏷️</span>
               <div>
@@ -110,7 +117,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
                 <p>Organize products with hierarchical categories</p>
               </div>
             </div>
-            
+
             <div className="nav-item-guide">
               <span className="nav-icon-guide">👥</span>
               <div>
@@ -118,7 +125,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
                 <p>Manage user accounts and permissions</p>
               </div>
             </div>
-            
+
             <div className="nav-item-guide">
               <span className="nav-icon-guide">📋</span>
               <div>
@@ -127,9 +134,9 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
               </div>
             </div>
           </div>
-          
+
           <div className="tip-box">
-            <strong>💡 Tip:</strong> Use the help button (❓) in the sidebar for detailed 
+            <strong>💡 Tip:</strong> Use the help button (❓) in the sidebar for detailed
             documentation on any section.
           </div>
         </div>
@@ -143,7 +150,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
         <div className="onboarding-security">
           <h3>Keep Your System Secure</h3>
           <p>As an admin, you have significant responsibilities. Follow these guidelines:</p>
-          
+
           <div className="security-guidelines">
             <div className="guideline-item">
               <span className="guideline-icon">🔐</span>
@@ -152,7 +159,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
                 <p>Use a strong, unique password and enable 2FA if available</p>
               </div>
             </div>
-            
+
             <div className="guideline-item">
               <span className="guideline-icon">👤</span>
               <div>
@@ -160,7 +167,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
                 <p>Only grant admin privileges to trusted individuals</p>
               </div>
             </div>
-            
+
             <div className="guideline-item">
               <span className="guideline-icon">📝</span>
               <div>
@@ -168,7 +175,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
                 <p>Regularly review admin actions for suspicious activity</p>
               </div>
             </div>
-            
+
             <div className="guideline-item">
               <span className="guideline-icon">🚪</span>
               <div>
@@ -177,9 +184,9 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
               </div>
             </div>
           </div>
-          
+
           <div className="warning-box">
-            <strong>⚠️ Important:</strong> All admin actions are logged for security and 
+            <strong>⚠️ Important:</strong> All admin actions are logged for security and
             compliance. Be mindful of your activities.
           </div>
         </div>
@@ -193,7 +200,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
         <div className="onboarding-help">
           <h3>Help & Support</h3>
           <p>We're here to help you succeed as an admin:</p>
-          
+
           <div className="help-resources">
             <div className="resource-item">
               <span className="resource-icon">❓</span>
@@ -202,7 +209,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
                 <p>Click the help button (❓) for contextual documentation</p>
               </div>
             </div>
-            
+
             <div className="resource-item">
               <span className="resource-icon">🔍</span>
               <div>
@@ -210,7 +217,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
                 <p>Use the search feature to find specific information quickly</p>
               </div>
             </div>
-            
+
             <div className="resource-item">
               <span className="resource-icon">💡</span>
               <div>
@@ -218,7 +225,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
                 <p>Get relevant help based on your current page</p>
               </div>
             </div>
-            
+
             <div className="resource-item">
               <span className="resource-icon">🛠️</span>
               <div>
@@ -227,9 +234,9 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
               </div>
             </div>
           </div>
-          
+
           <div className="success-box">
-            <strong>🎯 You're Ready!</strong> You now have everything you need to 
+            <strong>🎯 You're Ready!</strong> You now have everything you need to
             effectively manage the admin dashboard.
           </div>
         </div>
@@ -280,7 +287,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
             <span className="step-separator">/</span>
             <span className="step-total">{onboardingSteps.length}</span>
           </div>
-          <button 
+          <button
             className="onboarding-skip"
             onClick={handleSkip}
             aria-label="Skip onboarding"
@@ -291,7 +298,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
 
         {/* Progress bar */}
         <div className="onboarding-progress">
-          <div 
+          <div
             className="progress-fill"
             style={{ width: `${((currentStep + 1) / onboardingSteps.length) * 100}%` }}
           />
@@ -303,7 +310,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
             <h2>{currentStepData.title}</h2>
             <p className="step-description">{currentStepData.description}</p>
           </div>
-          
+
           <div className="step-content">
             {currentStepData.content}
           </div>
@@ -318,7 +325,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
           >
             Previous
           </button>
-          
+
           <div className="step-dots">
             {onboardingSteps.map((_, index) => (
               <button
@@ -329,7 +336,7 @@ const AdminOnboarding: React.FC<AdminOnboardingProps> = ({ user, onComplete }) =
               />
             ))}
           </div>
-          
+
           <button
             className="onboarding-button primary"
             onClick={handleNext}

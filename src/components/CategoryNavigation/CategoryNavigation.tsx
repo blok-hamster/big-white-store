@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Category, Subcategory, UserFriendlyError } from '../../types';
 import { categoryService } from '../../services/CategoryService';
@@ -34,7 +35,7 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
         unsubscribe = categoryService.subscribeToCategories((updatedCategories) => {
           setCategories(updatedCategories);
           setLoading(false);
-          
+
           // Auto-expand selected category
           if (selectedCategoryId) {
             setExpandedCategories(prev => new Set(prev).add(selectedCategoryId));
@@ -113,11 +114,10 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
         {category.subcategories.map((subcategory: Subcategory) => (
           <li key={subcategory.id} className="subcategory-item">
             <button
-              className={`subcategory-link ${
-                selectedCategoryId === category.id && selectedSubcategoryId === subcategory.id
-                  ? 'active'
-                  : ''
-              }`}
+              className={`subcategory-link ${selectedCategoryId === category.id && selectedSubcategoryId === subcategory.id
+                ? 'active'
+                : ''
+                }`}
               onClick={() => handleSubcategoryClick(category.id, subcategory.id)}
               aria-label={`Browse ${subcategory.name} in ${category.name}`}
             >
@@ -145,9 +145,7 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
           >
             <span className="category-name">{category.name}</span>
             {hasSubcategories && (
-              <span className={`expand-icon ${isExpanded ? 'expanded' : ''}`}>
-                ▼
-              </span>
+              <ChevronDown className={`expand-icon ${isExpanded ? 'expanded' : ''}`} size={16} />
             )}
           </button>
           {renderSubcategories(category)}
@@ -172,7 +170,7 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
       <nav className="category-navigation" aria-label="Product categories">
         <div className="error-state">
           <p className="error-message">{error}</p>
-          <button 
+          <button
             className="retry-button"
             onClick={() => window.location.reload()}
           >

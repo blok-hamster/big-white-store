@@ -28,6 +28,7 @@ export const useNotification = () => {
     }
 
     return id;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const removeNotification = useCallback((id: string) => {

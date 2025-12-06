@@ -233,7 +233,6 @@ export class AdminErrorHandler {
         url: window.location.href
       };
 
-      console.log('Error report prepared for monitoring service:', errorReport);
     }
   }
 

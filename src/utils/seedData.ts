@@ -80,7 +80,7 @@ const SAMPLE_PRODUCTS: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>[] = [
     price: 29.99,
     description: 'A comfortable and versatile cotton t-shirt perfect for everyday wear.',
     features: ['100% Cotton', 'Machine Washable', 'Comfortable Fit', 'Breathable Fabric'],
-    imageURLs: ['https://via.placeholder.com/400x400?text=Cotton+T-Shirt'],
+    imageURLs: ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80'],
     availableSizes: ['S', 'M', 'L', 'XL', 'XXL'],
     availableColors: ['White', 'Black', 'Navy', 'Gray'],
     inStock: true,
@@ -98,7 +98,7 @@ const SAMPLE_PRODUCTS: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>[] = [
     price: 79.99,
     description: 'A beautiful summer dress perfect for any occasion.',
     features: ['Lightweight Fabric', 'Elegant Design', 'Comfortable Fit', 'Easy Care'],
-    imageURLs: ['https://via.placeholder.com/400x400?text=Summer+Dress'],
+    imageURLs: ['https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80'],
     availableSizes: ['XS', 'S', 'M', 'L', 'XL'],
     availableColors: ['Blue', 'Pink', 'White', 'Yellow'],
     inStock: true,
@@ -116,7 +116,7 @@ const SAMPLE_PRODUCTS: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>[] = [
     price: 89.99,
     description: 'High-quality denim jeans with a modern fit and classic style.',
     features: ['Premium Denim', 'Modern Fit', 'Durable Construction', 'Classic Style'],
-    imageURLs: ['https://via.placeholder.com/400x400?text=Denim+Jeans'],
+    imageURLs: ['https://images.unsplash.com/photo-1542272617-08f086303294?auto=format&fit=crop&w=800&q=80'],
     availableSizes: ['28', '30', '32', '34', '36', '38'],
     availableColors: ['Dark Blue', 'Light Blue', 'Black'],
     inStock: true,
@@ -134,7 +134,7 @@ const SAMPLE_PRODUCTS: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>[] = [
     price: 49.99,
     description: 'High-performance sports jersey with moisture-wicking technology.',
     features: ['Moisture-Wicking', 'Lightweight', 'Breathable', 'Athletic Fit'],
-    imageURLs: ['https://via.placeholder.com/400x400?text=Sports+Jersey'],
+    imageURLs: ['https://images.unsplash.com/photo-1577471488278-16eec37ffcc2?auto=format&fit=crop&w=800&q=80'],
     availableSizes: ['S', 'M', 'L', 'XL'],
     availableColors: ['Red', 'Blue', 'Green', 'Black'],
     inStock: true,
@@ -152,7 +152,7 @@ const SAMPLE_PRODUCTS: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>[] = [
     price: 129.99,
     description: 'A stylish and practical handbag perfect for everyday use.',
     features: ['Genuine Leather', 'Multiple Compartments', 'Adjustable Strap', 'Elegant Design'],
-    imageURLs: ['https://via.placeholder.com/400x400?text=Handbag'],
+    imageURLs: ['https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80'],
     availableSizes: ['One Size'],
     availableColors: ['Black', 'Brown', 'Tan', 'Red'],
     inStock: true,
@@ -366,8 +366,15 @@ export class DataSeeder {
 
   /**
    * Run complete seeding process
+   * Only works in development mode
    */
   async seedAll(): Promise<void> {
+    // Prevent seeding in production
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('⚠️ Database seeding is disabled in production mode');
+      throw new Error('Database seeding is not allowed in production environment');
+    }
+
     try {
       console.log('🌱 Starting database seeding process...');
       
@@ -411,8 +418,15 @@ export class DataSeeder {
 
   /**
    * Force reseed (clears existing data and reseeds)
+   * Only works in development mode
    */
   async forceSeed(): Promise<void> {
+    // Prevent seeding in production
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('⚠️ Database seeding is disabled in production mode');
+      throw new Error('Database seeding is not allowed in production environment');
+    }
+
     try {
       console.log('🔄 Force reseeding database...');
       

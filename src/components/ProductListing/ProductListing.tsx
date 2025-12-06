@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useRef, useMemo, memo } from '
 import { Product, FilterState, FilterOptions, InventoryUpdate, UserFriendlyError } from '../../types';
 import { productService } from '../../services/ProductService';
 import { useFilterContext } from '../../contexts/FilterContext';
-import { getFilterDescription } from '../../hooks/useFilters';
 import { useInventoryUpdates } from '../../hooks/useInventoryUpdates';
 import ProductCard from '../ProductCard/ProductCard';
 import FilterPanel from '../FilterPanel/FilterPanel';
@@ -43,7 +42,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
   // Always call useFilterContext, but only use it if showFilters is true
   const filterContext = useFilterContext();
   const effectiveFilterContext = showFilters ? filterContext : null;
-  const activeFilters = useMemo(() => 
+  const activeFilters = useMemo(() =>
     externalFilters || effectiveFilterContext?.filters || {
       sizes: [],
       colors: [],
@@ -60,7 +59,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
       setError(null);
 
       let fetchedProducts: Product[] = [];
-      
+
       if (categoryId) {
         // Fetch all products without filters to enable client-side filtering
         fetchedProducts = await productService.getProductsByCategory(
@@ -70,13 +69,13 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
       }
 
       setAllProducts(fetchedProducts);
-      
+
       // Load available filters for this category
       if (categoryId && showFilters) {
         try {
           const filters = await productService.getAvailableFilters(categoryId);
           setAvailableFilters(filters);
-          
+
           // Update filter context if available
           if (effectiveFilterContext) {
             effectiveFilterContext.setAvailableFilters(filters);
@@ -89,8 +88,8 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
       setLoading(false);
     } catch (err) {
       console.error('Error loading products:', err);
-      const errorMessage = err instanceof UserFriendlyError 
-        ? err.userMessage 
+      const errorMessage = err instanceof UserFriendlyError
+        ? err.userMessage
         : 'Failed to load products';
       setError(errorMessage);
       setLoading(false);
@@ -107,7 +106,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
 
     // Apply filters using the filter context or external filters
     let filteredProducts = allProducts;
-    
+
     if (effectiveFilterContext) {
       filteredProducts = effectiveFilterContext.applyFiltersToProducts(allProducts);
     } else if (externalFilters) {
@@ -115,7 +114,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
       filteredProducts = allProducts.filter(product => {
         // Size filter
         if (externalFilters.sizes.length > 0) {
-          const hasMatchingSize = externalFilters.sizes.some(size => 
+          const hasMatchingSize = externalFilters.sizes.some(size =>
             product.availableSizes.includes(size)
           );
           if (!hasMatchingSize) return false;
@@ -123,7 +122,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
 
         // Color filter
         if (externalFilters.colors.length > 0) {
-          const hasMatchingColor = externalFilters.colors.some(color => 
+          const hasMatchingColor = externalFilters.colors.some(color =>
             product.availableColors.includes(color)
           );
           if (!hasMatchingColor) return false;
@@ -131,7 +130,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
 
         // Product type filter
         if (externalFilters.productTypes.length > 0) {
-          const hasMatchingType = externalFilters.productTypes.some(type => 
+          const hasMatchingType = externalFilters.productTypes.some(type =>
             product.tags.includes(type)
           );
           if (!hasMatchingType) return false;
@@ -146,8 +145,8 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
         }
 
         // Price range filter
-        if (product.price < externalFilters.priceRange.min || 
-            product.price > externalFilters.priceRange.max) {
+        if (product.price < externalFilters.priceRange.min ||
+          product.price > externalFilters.priceRange.max) {
           return false;
         }
 
@@ -162,7 +161,8 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
 
     setProducts(paginatedProducts);
     setHasMore(endIndex < totalProducts);
-  }, [allProducts, activeFilters, page, effectiveFilterContext, externalFilters]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allProducts, page, effectiveFilterContext, externalFilters]);
 
   // Load more products for infinite scroll
   const loadMore = useCallback(() => {
@@ -222,10 +222,10 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
 
   // Memoize product IDs to prevent unnecessary re-subscriptions
   const productIds = useMemo(() => products.map(p => p.id), [products]);
-  
+
   // Memoize inventory update callback for performance
   const handleInventoryUpdate = useCallback((updates: InventoryUpdate[]) => {
-    setProducts(prevProducts => 
+    setProducts(prevProducts =>
       prevProducts.map(product => {
         const update = updates.find(u => u.productId === product.id);
         if (update) {
@@ -240,7 +240,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
     );
 
     // Also update allProducts to keep the source data in sync
-    setAllProducts(prevProducts => 
+    setAllProducts(prevProducts =>
       prevProducts.map(product => {
         const update = updates.find(u => u.productId === product.id);
         if (update) {
@@ -321,12 +321,12 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
   );
 
   const renderEmptyState = () => {
-    const hasActiveFilters = activeFilters.sizes.length > 0 || 
-                           activeFilters.colors.length > 0 || 
-                           activeFilters.productTypes.length > 0 ||
-                           activeFilters.availability !== 'all' ||
-                           activeFilters.priceRange.min > 0 ||
-                           activeFilters.priceRange.max < Number.MAX_VALUE;
+    const hasActiveFilters = activeFilters.sizes.length > 0 ||
+      activeFilters.colors.length > 0 ||
+      activeFilters.productTypes.length > 0 ||
+      activeFilters.availability !== 'all' ||
+      activeFilters.priceRange.min > 0 ||
+      activeFilters.priceRange.max < Number.MAX_VALUE;
 
     return (
       <div className="empty-state">
@@ -336,12 +336,12 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
           {hasActiveFilters
             ? 'Try adjusting your filters to see more products.'
             : categoryId
-            ? 'This category doesn\'t have any products yet.'
-            : 'Please select a category to browse products.'
+              ? 'This category doesn\'t have any products yet.'
+              : 'Please select a category to browse products.'
           }
         </p>
         {hasActiveFilters && effectiveFilterContext && (
-          <button 
+          <button
             className="clear-filters-btn"
             onClick={() => effectiveFilterContext.clearFilters()}
           >
@@ -391,9 +391,9 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
   );
 
   // Memoize expensive calculations
-  const hasActiveFilters = useMemo(() => 
-    activeFilters.sizes.length > 0 || 
-    activeFilters.colors.length > 0 || 
+  const hasActiveFilters = useMemo(() =>
+    activeFilters.sizes.length > 0 ||
+    activeFilters.colors.length > 0 ||
     activeFilters.productTypes.length > 0 ||
     activeFilters.availability !== 'all' ||
     activeFilters.priceRange.min > 0 ||
@@ -402,15 +402,16 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
   );
 
   // Memoize rendered products to prevent unnecessary re-renders
-  const renderedProducts = useMemo(() => 
+  const renderedProducts = useMemo(() =>
     products.map((product) => (
       <ProductCard
         key={product.id}
         product={product}
-        onProductClick={onProductSelect}
+        // onProductClick={onProductSelect} // Removed to allow Link navigation
         className={viewMode === 'list' ? 'list-card' : ''}
       />
-    )), [products, onProductSelect, viewMode]
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    )), [products, viewMode]
   );
 
   return (
@@ -436,7 +437,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
                 {effectiveFilterContext?.activeFilterCount || 0} filter{(effectiveFilterContext?.activeFilterCount || 0) !== 1 ? 's' : ''} applied
               </span>
               {effectiveFilterContext && (
-                <button 
+                <button
                   className="clear-all-filters"
                   onClick={() => effectiveFilterContext.clearFilters()}
                 >
@@ -448,7 +449,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
               {activeFilters.sizes.map(size => (
                 <span key={`size-${size}`} className="filter-chip">
                   Size: {size}
-                  <button 
+                  <button
                     onClick={() => removeActiveFilter('sizes', size)}
                     aria-label={`Remove size filter: ${size}`}
                   >
@@ -459,7 +460,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
               {activeFilters.colors.map(color => (
                 <span key={`color-${color}`} className="filter-chip">
                   Color: {color}
-                  <button 
+                  <button
                     onClick={() => removeActiveFilter('colors', color)}
                     aria-label={`Remove color filter: ${color}`}
                   >
@@ -470,7 +471,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
               {activeFilters.productTypes.map(type => (
                 <span key={`type-${type}`} className="filter-chip">
                   Type: {type}
-                  <button 
+                  <button
                     onClick={() => removeActiveFilter('productTypes', type)}
                     aria-label={`Remove type filter: ${type}`}
                   >
@@ -481,7 +482,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
               {activeFilters.availability !== 'all' && (
                 <span className="filter-chip">
                   Availability: {activeFilters.availability === 'inStock' ? 'In Stock' : 'Out of Stock'}
-                  <button 
+                  <button
                     onClick={() => removeActiveFilter('availability')}
                     aria-label="Remove availability filter"
                   >
@@ -492,7 +493,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
               {(activeFilters.priceRange.min > 0 || activeFilters.priceRange.max < Number.MAX_VALUE) && (
                 <span className="filter-chip">
                   Price: ${activeFilters.priceRange.min} - ${activeFilters.priceRange.max === Number.MAX_VALUE ? '∞' : activeFilters.priceRange.max}
-                  <button 
+                  <button
                     onClick={() => removeActiveFilter('priceRange')}
                     aria-label="Remove price range filter"
                   >
@@ -541,7 +542,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
             <span className="status-text">
               Connection lost. Product updates may be delayed.
             </span>
-            <button 
+            <button
               className="retry-connection-btn"
               onClick={retryConnection}
               disabled={loading}
@@ -558,7 +559,7 @@ const ProductListing: React.FC<ProductListingProps> = memo(({
             <span className="status-text">
               Inventory updates unavailable: {inventoryError}
             </span>
-            <button 
+            <button
               className="retry-connection-btn"
               onClick={retryConnection}
               disabled={loading}

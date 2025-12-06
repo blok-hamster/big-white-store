@@ -66,7 +66,7 @@
 .filter-input:focus,
 .filter-select:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #000000;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
@@ -278,12 +278,12 @@
 }
 
 .btn-primary {
-  background: #007bff;
+  background: #000000;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #0056b3;
+  background: #333333;
 }
 
 .btn-secondary {

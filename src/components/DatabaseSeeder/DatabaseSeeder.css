@@ -79,7 +79,7 @@
   margin-top: 0.5rem;
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;
-  color: #007bff;
+  color: #000000;
 }
 
 .seeder-actions {
@@ -111,12 +111,12 @@
 }
 
 .btn-primary {
-  background: #007bff;
+  background: #000000;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #0056b3;
+  background: #333333;
 }
 
 .btn-warning {
@@ -180,12 +180,12 @@
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-family: 'Courier New', monospace;
-  color: #007bff;
+  color: #000000;
   border: 1px solid #e9ecef;
 }
 
 .admin-login-info a {
-  color: #007bff;
+  color: #000000;
   text-decoration: none;
   font-weight: 500;
 }

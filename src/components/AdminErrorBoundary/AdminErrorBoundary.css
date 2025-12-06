@@ -100,12 +100,12 @@
 }
 
 .retry-button {
-  background-color: #007bff;
+  background-color: #000000;
   color: white;
 }
 
 .retry-button:hover {
-  background-color: #0056b3;
+  background-color: #333333;
   transform: translateY(-1px);
 }
 
@@ -134,7 +134,7 @@
   background-color: #f8f9fa;
   border-radius: 8px;
   padding: 1.5rem;
-  border-left: 4px solid #007bff;
+  border-left: 4px solid #000000;
 }
 
 .error-help p {

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, memo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Product } from '../../types';
 import LazyImage from '../LazyImage/LazyImage';
 import './ProductCard.css';
@@ -15,16 +15,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({
   onProductClick,
   className = ''
 }) => {
-  const [imageError, setImageError] = useState(false);
-  const navigate = useNavigate();
-
-  const handleCardClick = useCallback(() => {
-    if (onProductClick) {
-      onProductClick(product.id);
-    } else {
-      navigate(`/product/${product.id}`);
-    }
-  }, [onProductClick, product.id, navigate]);
+  const [, setImageError] = useState(false);
 
   const handleImageError = useCallback(() => {
     setImageError(true);
@@ -47,26 +38,39 @@ const ProductCard: React.FC<ProductCardProps> = memo(({
     return { text: 'In Stock', className: 'in-stock' };
   }, [product.inStock, product.stockCount]);
 
-  const primaryImage = product.imageURLs && product.imageURLs.length > 0 
-    ? product.imageURLs[0] 
+  const primaryImage = product.imageURLs && product.imageURLs.length > 0
+    ? product.imageURLs[0]
     : null;
 
   const availabilityStatus = getAvailabilityStatus();
 
+  // Conditional wrapper to handle both Link and onClick
+  const CardWrapper = ({ children }: { children: React.ReactNode }) => {
+    if (onProductClick) {
+      return (
+        <div
+          className={`product-card ${className} ${!product.inStock ? 'unavailable' : ''}`}
+          onClick={() => onProductClick(product.id)}
+          role="button"
+          tabIndex={0}
+        >
+          {children}
+        </div>
+      );
+    }
+
+    return (
+      <Link
+        to={`/product/${product.id}`}
+        className={`product-card ${className} ${!product.inStock ? 'unavailable' : ''}`}
+      >
+        {children}
+      </Link>
+    );
+  };
+
   return (
-    <div
-      className={`product-card ${className} ${!product.inStock ? 'unavailable' : ''}`}
-      onClick={handleCardClick}
-      role="button"
-      tabIndex={0}
-      aria-label={`View details for ${product.name}`}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleCardClick();
-        }
-      }}
-    >
+    <CardWrapper>
       {/* Product Image */}
       <div className="product-image-container">
         {primaryImage ? (
@@ -84,7 +88,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({
             <div className="image-skeleton" aria-label="Product image loading"></div>
           </div>
         )}
-        
+
         {/* Availability Badge */}
         <div className={`availability-badge ${availabilityStatus.className}`}>
           {availabilityStatus.text}
@@ -96,7 +100,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({
         <h3 className="product-name" title={product.name}>
           {product.name}
         </h3>
-        
+
         <div className="product-price">
           {formatPrice(product.price)}
         </div>
@@ -109,43 +113,16 @@ const ProductCard: React.FC<ProductCardProps> = memo(({
               {product.availableSizes.length > 3 && '...'}
             </span>
           )}
-          
-          {product.availableColors && product.availableColors.length > 0 && (
-            <div className="color-info">
-              <span className="color-label">Colors:</span>
-              <div className="color-swatches">
-                {product.availableColors.slice(0, 4).map((color, index) => (
-                  <div
-                    key={index}
-                    className="color-swatch"
-                    style={{ backgroundColor: color.toLowerCase() }}
-                    title={color}
-                    aria-label={`Available in ${color}`}
-                  ></div>
-                ))}
-                {product.availableColors.length > 4 && (
-                  <span className="color-more">+{product.availableColors.length - 4}</span>
-                )}
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* Stock Count for Low Stock Items */}
+        {/* Stock Warning */}
         {product.inStock && product.stockCount <= 5 && (
           <div className="stock-warning">
             Only {product.stockCount} left!
           </div>
         )}
       </div>
-
-      {/* Hover Overlay */}
-      <div className="card-overlay">
-        <button className="view-details-btn" aria-label={`View details for ${product.name}`}>
-          View Details
-        </button>
-      </div>
-    </div>
+    </CardWrapper>
   );
 });
 

@@ -1,6 +1,5 @@
 import {
   collection,
-  doc,
   getDocs,
   addDoc,
   query,
@@ -368,7 +367,7 @@ export class AdminService {
     }
 
     // Check for wildcard permissions
-    const [resource, action] = requiredPermission.split(':');
+    const [resource] = requiredPermission.split(':');
     
     // Check for resource-level wildcard (e.g., "products:*")
     if (userPermissions.includes(`${resource}:*`)) {
@@ -388,13 +387,9 @@ export class AdminService {
    * Private helper method
    */
   private async getClientIP(): Promise<string> {
-    try {
-      // In a real implementation, you might get this from a server endpoint
-      // For now, return a placeholder
-      return 'client-ip';
-    } catch (error) {
-      return 'unknown';
-    }
+    // In a real implementation, you might get this from a server endpoint
+    // For now, return a placeholder
+    return 'client-ip';
   }
 
   /**

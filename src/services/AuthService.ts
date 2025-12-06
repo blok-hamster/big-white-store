@@ -33,7 +33,6 @@ export class AuthService {
       
       // Clear cache if user changed
       if (previousUserId !== newUserId) {
-        console.log('AuthService: User changed, clearing admin cache');
         this.clearAdminCache();
       }
       
@@ -178,14 +177,12 @@ export class AuthService {
       // Check cache first
       const cached = this.adminCheckCache.get(userId);
       if (cached && (now - cached.timestamp) < this.CACHE_DURATION) {
-        console.log('AuthService: Returning cached admin status for user:', userId);
         return cached.isAdmin;
       }
 
       // Check if there's already a pending promise for this user
       const existingPromise = this.adminCheckPromises.get(userId);
       if (existingPromise) {
-        console.log('AuthService: Returning existing admin check promise for user:', userId);
         return existingPromise;
       }
 
@@ -214,7 +211,6 @@ export class AuthService {
    * Perform the actual admin check
    */
   private async performAdminCheck(user: User): Promise<boolean> {
-    console.log('AuthService: Performing admin check for user:', user.uid);
     
     // First check Firebase Auth custom claims
     const tokenResult = await user.getIdTokenResult();
@@ -446,13 +442,9 @@ export class AuthService {
    * Private helper method
    */
   private async getClientIP(): Promise<string> {
-    try {
-      // In a real implementation, you might get this from a server endpoint
-      // For now, return a placeholder
-      return 'client-ip';
-    } catch (error) {
-      return 'unknown';
-    }
+    // In a real implementation, you might get this from a server endpoint
+    // For now, return a placeholder
+    return 'client-ip';
   }
 
   /**

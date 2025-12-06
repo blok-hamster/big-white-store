@@ -150,6 +150,9 @@ export const useInventoryUpdates = (
 
   // Set up subscription when productIds change
   useEffect(() => {
+    // Copy ref value to local variable for cleanup
+    const timeoutsRef = notificationTimeoutsRef.current;
+    
     if (productIds && productIds.length > 0) {
       setupSubscription();
     }
@@ -159,8 +162,8 @@ export const useInventoryUpdates = (
         unsubscribeRef.current();
       }
       // Clear all notification timeouts
-      notificationTimeoutsRef.current.forEach(timeout => clearTimeout(timeout));
-      notificationTimeoutsRef.current.clear();
+      timeoutsRef.forEach(timeout => clearTimeout(timeout));
+      timeoutsRef.clear();
     };
   }, [setupSubscription, productIds]);
 

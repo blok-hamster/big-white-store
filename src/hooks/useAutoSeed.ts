@@ -22,6 +22,17 @@ export const useAutoSeed = (autoSeed = false) => {
   });
 
   useEffect(() => {
+    // Completely disable seeding in production
+    if (process.env.NODE_ENV === 'production') {
+      setState(prev => ({
+        ...prev,
+        isSeeding: false,
+        isSeeded: true, // Assume seeded in production
+        shouldShowSeeder: false
+      }));
+      return;
+    }
+
     const checkSeedStatus = async () => {
       try {
         setState(prev => ({ ...prev, isSeeding: true, error: null }));
@@ -61,6 +72,17 @@ export const useAutoSeed = (autoSeed = false) => {
   }, [autoSeed]);
 
   const seedDatabase = async (force = false) => {
+    // Prevent seeding in production
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('Database seeding is disabled in production mode');
+      setState(prev => ({
+        ...prev,
+        error: 'Database seeding is not allowed in production',
+        isSeeding: false
+      }));
+      return false;
+    }
+
     try {
       setState(prev => ({ ...prev, isSeeding: true, error: null }));
 

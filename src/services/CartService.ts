@@ -310,6 +310,7 @@ export class CartService {
     }
     
     localStorage.setItem('cart', JSON.stringify(cart));
+    window.dispatchEvent(new Event('local-cart-updated'));
     return cart[existingItemIndex >= 0 ? existingItemIndex : cart.length - 1];
   }
 
@@ -335,6 +336,7 @@ export class CartService {
     if (itemIndex >= 0) {
       cart[itemIndex].quantity = Math.max(1, quantity);
       localStorage.setItem('cart', JSON.stringify(cart));
+      window.dispatchEvent(new Event('local-cart-updated'));
     }
   }
 
@@ -342,6 +344,7 @@ export class CartService {
     const cart = this.getLocalCartItems();
     const filteredCart = cart.filter(item => item.id !== cartItemId);
     localStorage.setItem('cart', JSON.stringify(filteredCart));
+    window.dispatchEvent(new Event('local-cart-updated'));
   }
 
   /**

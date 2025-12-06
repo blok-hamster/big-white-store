@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useImagePerformanceMonitor } from '../../hooks/usePerformanceMonitor';
-import { 
-  optimizeImageForMobile, 
-  optimizeImageForMobileEnhanced,
-  getMobileIntersectionObserverOptions,
-  getNetworkAwareLoadingStrategy 
+import {
+  optimizeImageForMobile,
+  optimizeImageForMobileEnhanced
 } from '../../utils/mobileOptimizations';
 import './LazyImage.css';
 
@@ -64,29 +62,11 @@ const LazyImage: React.FC<LazyImageProps> = ({
   // Set up performance monitoring for image loading
   useEffect(() => {
     if (imageSrc && !isLoaded && !hasError) {
-      const { onLoad: perfOnLoad, onError: perfOnError } = monitorImageLoad(imageSrc);
-      
-      // Store the performance callbacks to call them when image loads/errors
-      const originalHandleLoad = handleLoad;
-      const originalHandleError = handleError;
-      
-      // Override handlers to include performance monitoring
-      const enhancedHandleLoad = () => {
-        perfOnLoad();
-        originalHandleLoad();
-      };
-      
-      const enhancedHandleError = () => {
-        perfOnError();
-        originalHandleError();
-      };
-      
-      // Store enhanced handlers for cleanup
-      return () => {
-        // Cleanup if needed
-      };
+      // Performance monitoring is initialized but not actively tracked
+      // to avoid complexity with the image load lifecycle
+      monitorImageLoad(imageSrc);
     }
-  }, [imageSrc, isLoaded, hasError, handleLoad, handleError, monitorImageLoad]);
+  }, [imageSrc, isLoaded, hasError, monitorImageLoad]);
 
   // Set up intersection observer for lazy loading
   useEffect(() => {
@@ -135,8 +115,8 @@ const LazyImage: React.FC<LazyImageProps> = ({
   useEffect(() => {
     if (isInView && !imageSrc) {
       // Use enhanced mobile image optimization
-      const optimizedSrc = optimizeImageForMobileEnhanced ? 
-        optimizeImageForMobileEnhanced(src, typeof width === 'number' ? width : undefined) : 
+      const optimizedSrc = optimizeImageForMobileEnhanced ?
+        optimizeImageForMobileEnhanced(src, typeof width === 'number' ? width : undefined) :
         optimizeImageForMobile(src, typeof width === 'number' ? width : undefined);
       setImageSrc(optimizedSrc);
     }
@@ -147,7 +127,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
     setIsLoaded(false);
     setHasError(false);
     setImageSrc(undefined);
-    
+
     if (loading === 'eager') {
       setImageSrc(src);
     }
@@ -172,9 +152,9 @@ const LazyImage: React.FC<LazyImageProps> = ({
       {!isLoaded && !hasError && (
         <div className="lazy-image-placeholder">
           {placeholder ? (
-            <img 
-              src={placeholder} 
-              alt="" 
+            <img
+              src={placeholder}
+              alt=""
               className="placeholder-image"
               aria-hidden="true"
             />

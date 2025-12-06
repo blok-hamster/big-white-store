@@ -15,12 +15,12 @@ import {
   FirestoreError,
   serverTimestamp
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { db, storage } from '../config/firebase';
+import { db } from '../config/firebase';
 import { Product, FilterState, FilterOptions, InventoryUpdate, UserFriendlyError, CreateProductRequest, ProductUpdate } from '../types';
 import { cacheService } from './CacheService';
 import { performanceMonitor } from '../utils/performanceMonitor';
 import { adminService } from './AdminService';
+import { cloudinaryService } from './CloudinaryService';
 
 export class ProductService {
   private static instance: ProductService;
@@ -325,7 +325,6 @@ export class ProductService {
             const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
             
             setTimeout(() => {
-              console.log(`Attempting to reconnect inventory listener (attempt ${reconnectAttempts})`);
               // The listener will automatically retry
             }, delay);
           } else {
@@ -403,7 +402,6 @@ export class ProductService {
             const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
             
             setTimeout(() => {
-              console.log(`Attempting to reconnect product inventory listener (attempt ${reconnectAttempts})`);
             }, delay);
           } else {
             options?.onError?.(userFriendlyError);
@@ -633,38 +631,23 @@ export class ProductService {
   }
 
   /**
-   * Upload product images to Firebase Storage
+   * Upload product images to Cloudinary
    * Private helper method
    */
   private async uploadProductImages(imageFiles: File[]): Promise<string[]> {
-    const uploadPromises = imageFiles.map(async (file, index) => {
-      const timestamp = Date.now();
-      const fileName = `products/${timestamp}_${index}_${file.name}`;
-      const storageRef = ref(storage, fileName);
-      
-      const snapshot = await uploadBytes(storageRef, file);
-      return await getDownloadURL(snapshot.ref);
-    });
-
+    const uploadPromises = imageFiles.map(file => cloudinaryService.uploadImage(file));
     return await Promise.all(uploadPromises);
   }
 
   /**
-   * Delete product images from Firebase Storage
+   * Delete product images
    * Private helper method
    */
   private async deleteProductImages(imageURLs: string[]): Promise<void> {
-    const deletePromises = imageURLs.map(async (url) => {
-      try {
-        const storageRef = ref(storage, url);
-        await deleteObject(storageRef);
-      } catch (error) {
-        // Log error but don't throw - image might already be deleted
-        console.error('Error deleting image:', error);
-      }
-    });
-
-    await Promise.all(deletePromises);
+    // Client-side deletion from Cloudinary is restricted for security.
+    // In a production app, this should be handled by a backend function using the Admin API.
+    console.warn('Skipping image deletion from Cloudinary (requires backend signature).');
+    return Promise.resolve();
   }
 
   /**

@@ -12,26 +12,27 @@ interface MobileEnhancementsProps {
  * Requirements: 5.1, 5.2 - Mobile optimization and performance
  */
 const MobileEnhancements: React.FC<MobileEnhancementsProps> = ({ children }) => {
-  const { isMobile, isTouch, shouldReduceMotion, networkStrategy } = useMobileOptimizations();
+  const { isMobile, isTouch, networkStrategy } = useMobileOptimizations();
   const { performanceMode, memoryUsage } = useMobilePerformance();
-  const { imageQuality, loadingStrategy } = useResponsiveImages();
-  
+  // useResponsiveImages is available for future use
+  useResponsiveImages();
+
   const [gestureHint, setGestureHint] = useState<string | null>(null);
   const [showPerformanceIndicator, setShowPerformanceIndicator] = useState(false);
 
   // Apply performance mode classes to document
   useEffect(() => {
     const docElement = document.documentElement;
-    
+
     // Remove existing performance classes
     docElement.classList.remove('battery-mode', 'balanced-mode', 'high-performance');
-    
+
     // Add current performance mode class
     docElement.classList.add(`${performanceMode}-mode`);
-    
+
     // Show performance indicator if memory usage is high
     setShowPerformanceIndicator(memoryUsage > 75);
-    
+
     return () => {
       docElement.classList.remove('battery-mode', 'balanced-mode', 'high-performance');
     };
@@ -43,10 +44,10 @@ const MobileEnhancements: React.FC<MobileEnhancementsProps> = ({ children }) => 
 
     const handleGestureEvent = (e: CustomEvent) => {
       const { type } = e.detail;
-      
+
       // Provide haptic feedback
       addHapticFeedback(type === 'swipe' ? 'light' : 'medium');
-      
+
       // Show gesture hint
       if (type === 'swipe') {
         setGestureHint('Swipe detected');
@@ -57,7 +58,7 @@ const MobileEnhancements: React.FC<MobileEnhancementsProps> = ({ children }) => 
     // Listen for custom gesture events
     window.addEventListener('swipe' as any, handleGestureEvent);
     window.addEventListener('mobileNavigation' as any, handleGestureEvent);
-    
+
     return () => {
       window.removeEventListener('swipe' as any, handleGestureEvent);
       window.removeEventListener('mobileNavigation' as any, handleGestureEvent);
@@ -108,14 +109,14 @@ const MobileEnhancements: React.FC<MobileEnhancementsProps> = ({ children }) => 
   return (
     <div className="mobile-enhancements">
       {children}
-      
+
       {/* Gesture feedback indicator */}
       {gestureHint && (
         <div className="gesture-feedback show">
           {gestureHint}
         </div>
       )}
-      
+
       {/* Performance indicator */}
       {showPerformanceIndicator && (
         <div className="performance-indicator">
@@ -123,7 +124,7 @@ const MobileEnhancements: React.FC<MobileEnhancementsProps> = ({ children }) => 
           <div className="memory-usage">Memory: {Math.round(memoryUsage)}%</div>
         </div>
       )}
-      
+
       {/* Network quality indicator */}
       {networkStrategy === 'lazy' && (
         <div className="network-indicator">
@@ -131,7 +132,7 @@ const MobileEnhancements: React.FC<MobileEnhancementsProps> = ({ children }) => 
           <span className="network-text">Optimizing for your connection</span>
         </div>
       )}
-      
+
       {/* Mobile navigation hints */}
       <div className="mobile-navigation-hints">
         <div className="swipe-hint left">

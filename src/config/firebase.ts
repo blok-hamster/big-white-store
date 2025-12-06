@@ -63,19 +63,12 @@ if (useEmulator) {
     connectFirestoreEmulator(db, 'localhost', 8080);
     connectStorageEmulator(storage, 'localhost', 9199);
     connectAuthEmulator(auth, 'http://localhost:9099');
-    console.log('🔥 Connected to Firebase emulators');
-    console.log('📊 Firestore: localhost:8080');
-    console.log('🔐 Auth: localhost:9099');
-    console.log('📁 Storage: localhost:9199');
   } catch (error) {
     // Emulators might already be connected, which is fine
     console.warn('Firebase emulators connection warning (this is normal if already connected):', error);
   }
 } else if (useMockMode) {
-  console.log('🔥 Using Firebase with demo credentials (mock mode)');
-  console.log('⚠️  This is for development only - no real Firebase services connected');
 } else {
-  console.log('🔥 Using Firebase production services');
 }
 
 export default app;

@@ -69,7 +69,7 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #000000;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
@@ -92,7 +92,7 @@
 .role-filter:focus,
 .status-filter:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #000000;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
@@ -240,12 +240,12 @@
 }
 
 .btn-primary {
-  background: #007bff;
+  background: #000000;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #0056b3;
+  background: #333333;
 }
 
 .btn-secondary {
@@ -509,7 +509,7 @@ le Management Modal Styles */
 
 .role-select:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #000000;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
@@ -526,7 +526,7 @@ le Management Modal Styles */
 
 .reason-textarea:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #000000;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
@@ -584,7 +584,7 @@ le Management Modal Styles */
 }
 
 .selected-count {
-  color: #007bff;
+  color: #000000;
   font-weight: 600;
 }
 
@@ -760,7 +760,7 @@ le Management Modal Styles */
 
 .select-all-checkbox:focus,
 .user-checkbox:focus {
-  outline: 2px solid #007bff;
+  outline: 2px solid #000000;
   outline-offset: 2px;
 }
 
@@ -882,7 +882,7 @@ le Management Modal Styles */
 .metric-value {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #007bff;
+  color: #000000;
   margin-bottom: 0.25rem;
 }
 
@@ -989,7 +989,7 @@ le Management Modal Styles */
 .activity-filter-select:focus,
 .date-filter:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #000000;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 

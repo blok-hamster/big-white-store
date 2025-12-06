@@ -52,7 +52,6 @@ export const useAdminPerformance = () => {
         
         // Log performance metrics in development
         if (process.env.NODE_ENV === 'development') {
-          console.log(`Admin operation "${operationName}" took ${duration.toFixed(2)}ms`);
           
           // Warn about slow operations
           if (duration > 1000) {

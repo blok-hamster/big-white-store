@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Heart, Check, Plus, Minus } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Product, ProductOptions, InventoryUpdate, UserFriendlyError } from '../../types';
+import { Product, ProductOptions, UserFriendlyError } from '../../types';
 import { productService } from '../../services/ProductService';
 import { cartService } from '../../services/CartService';
 import { wishlistService } from '../../services/WishlistService';
 import { useAuth, useNotification } from '../../hooks';
-import { useProductInventoryUpdates } from '../../hooks/useInventoryUpdates';
 import { isTouchDevice } from '../../utils/mobileOptimizations';
 import NotificationContainer from '../NotificationContainer';
 import './ProductDetail.css';
@@ -23,20 +23,20 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
 }) => {
   const { productId: paramProductId } = useParams<{ productId: string }>();
   const navigate = useNavigate();
-  
+
   // Use productId from props or URL params
   const productId = propProductId || paramProductId;
-  
+
   // Hooks
   const { user, isAuthenticated, signInAsGuest } = useAuth();
-  const { 
-    notifications, 
-    removeNotification, 
-    showSuccess, 
-    showError, 
-    showWarning 
+  const {
+    notifications,
+    removeNotification,
+    showSuccess,
+    showError,
+    showWarning
   } = useNotification();
-  
+
   // State management
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -49,7 +49,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
   const [addingToCart, setAddingToCart] = useState(false);
   const [addingToWishlist, setAddingToWishlist] = useState(false);
   const [isInWishlist, setIsInWishlist] = useState(false);
-  
+
   // Refs for swipe gesture support
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
@@ -67,7 +67,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         setError(null);
         const productData = await productService.getProductById(productId);
         setProduct(productData);
-        
+
         // Set default selections
         if (productData.availableSizes.length > 0) {
           setSelectedSize(productData.availableSizes[0]);
@@ -109,19 +109,19 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
   const inventoryConnected = true;
   const inventoryHasError = false;
   const inventoryError = null;
-  const retryInventoryConnection = () => {};
+  const retryInventoryConnection = () => { };
 
   // Image navigation handlers
   const handlePreviousImage = useCallback(() => {
     if (!product || product.imageURLs.length <= 1) return;
-    setSelectedImageIndex(prev => 
+    setSelectedImageIndex(prev =>
       prev === 0 ? product.imageURLs.length - 1 : prev - 1
     );
   }, [product]);
 
   const handleNextImage = useCallback(() => {
     if (!product || product.imageURLs.length <= 1) return;
-    setSelectedImageIndex(prev => 
+    setSelectedImageIndex(prev =>
       prev === product.imageURLs.length - 1 ? 0 : prev + 1
     );
   }, [product]);
@@ -145,7 +145,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
 
     const handleTouchMove = (e: TouchEvent) => {
       if (!isDragging) return;
-      
+
       const currentX = e.touches[0].clientX;
       const currentY = e.touches[0].clientY;
       const deltaX = currentX - startX;
@@ -207,7 +207,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
   // Quantity validation
   const handleQuantityChange = (newQuantity: number) => {
     if (!product) return;
-    
+
     const maxQuantity = Math.min(product.stockCount, 10); // Limit to 10 or stock count
     const validQuantity = Math.max(1, Math.min(newQuantity, maxQuantity));
     setQuantity(validQuantity);
@@ -219,7 +219,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
       showWarning('Please select size and color before adding to cart.');
       return;
     }
-    
+
     setAddingToCart(true);
     try {
       const options: ProductOptions = {
@@ -227,7 +227,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         selectedColor,
         quantity
       };
-      
+
       if (onAddToCart) {
         // Use provided callback
         await onAddToCart(product, options);
@@ -238,8 +238,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         showSuccess(`${product.name} added to cart!`);
       }
     } catch (err) {
-      const errorMessage = err instanceof UserFriendlyError 
-        ? err.userMessage 
+      const errorMessage = err instanceof UserFriendlyError
+        ? err.userMessage
         : 'Failed to add item to cart. Please try again.';
       showError(errorMessage);
     } finally {
@@ -250,7 +250,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
   // Add to wishlist handler with integrated wishlist service
   const handleAddToWishlist = async () => {
     if (!product) return;
-    
+
     // Check if user is authenticated
     if (!user) {
       showWarning('Please sign in to add items to your wishlist.');
@@ -265,7 +265,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         return;
       }
     }
-    
+
     setAddingToWishlist(true);
     try {
       if (isInWishlist) {
@@ -286,8 +286,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         showSuccess(`${product.name} added to wishlist!`);
       }
     } catch (err) {
-      const errorMessage = err instanceof UserFriendlyError 
-        ? err.userMessage 
+      const errorMessage = err instanceof UserFriendlyError
+        ? err.userMessage
         : 'Failed to update wishlist. Please try again.';
       showError(errorMessage);
     } finally {
@@ -318,9 +318,9 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
   if (loading) {
     return (
       <div className="product-detail-container">
-        <NotificationContainer 
-          notifications={notifications} 
-          onRemove={removeNotification} 
+        <NotificationContainer
+          notifications={notifications}
+          onRemove={removeNotification}
         />
         <div className="product-detail-loading">
           <div className="loading-spinner"></div>
@@ -334,14 +334,14 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
   if (error || !product) {
     return (
       <div className="product-detail-container">
-        <NotificationContainer 
-          notifications={notifications} 
-          onRemove={removeNotification} 
+        <NotificationContainer
+          notifications={notifications}
+          onRemove={removeNotification}
         />
         <div className="product-detail-error">
           <h2>Product Not Found</h2>
           <p>{error || 'The requested product could not be found.'}</p>
-          <button 
+          <button
             className="back-button"
             onClick={() => navigate(-1)}
           >
@@ -358,22 +358,22 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
 
   return (
     <div className="product-detail-container">
-      <NotificationContainer 
-        notifications={notifications} 
-        onRemove={removeNotification} 
+      <NotificationContainer
+        notifications={notifications}
+        onRemove={removeNotification}
       />
-      
+
       <div className="product-detail">
         {/* Image Gallery */}
         <div className="product-images">
           <div className="main-image-container" ref={imageContainerRef}>
             <img
               src={product.imageURLs[selectedImageIndex]}
-              alt={`${product.name} - Image ${selectedImageIndex + 1}`}
+              alt={`${product.name} - view ${selectedImageIndex + 1}`}
               className={`main-image ${isZoomed ? 'zoomed' : ''}`}
               onClick={() => setIsZoomed(!isZoomed)}
             />
-            
+
             {product.imageURLs.length > 1 && (
               <>
                 <button
@@ -390,7 +390,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                 >
                   ›
                 </button>
-                
+
                 {/* Swipe indicators for mobile */}
                 {isTouchDevice() && (
                   <div className="swipe-indicators">
@@ -404,12 +404,12 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                 )}
               </>
             )}
-            
+
             <div className="zoom-hint">
               Click to {isZoomed ? 'zoom out' : 'zoom in'}
             </div>
           </div>
-          
+
           {product.imageURLs.length > 1 && (
             <div className="image-thumbnails">
               {product.imageURLs.map((imageUrl, index) => (
@@ -435,7 +435,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
               <span className="status-text">
                 Connection lost. Inventory updates may be delayed.
               </span>
-              <button 
+              <button
                 className="retry-connection-btn"
                 onClick={retryInventoryConnection}
                 disabled={loading}
@@ -452,7 +452,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
               <span className="status-text">
                 Inventory updates unavailable: {inventoryError}
               </span>
-              <button 
+              <button
                 className="retry-connection-btn"
                 onClick={retryInventoryConnection}
                 disabled={loading}
@@ -520,7 +520,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                     aria-label={`Select ${color} color`}
                     title={color}
                   >
-                    {selectedColor === color && <span className="checkmark">✓</span>}
+                    {selectedColor === color && <Check className="checkmark" size={12} color={color.toLowerCase() === 'white' ? 'black' : 'white'} />}
                   </button>
                 ))}
               </div>
@@ -538,7 +538,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                   disabled={quantity <= 1}
                   aria-label="Decrease quantity"
                 >
-                  -
+                  <Minus size={16} />
                 </button>
                 <input
                   type="number"
@@ -554,7 +554,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                   disabled={quantity >= maxQuantity}
                   aria-label="Increase quantity"
                 >
-                  +
+                  <Plus size={16} />
                 </button>
               </div>
               <p className="quantity-note">Maximum: {maxQuantity}</p>
@@ -570,17 +570,17 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
             >
               {addingToCart ? 'Adding...' : 'Add to Cart'}
             </button>
-            
+
             <button
               className={`add-to-wishlist-button ${isInWishlist ? 'in-wishlist' : ''}`}
               onClick={handleAddToWishlist}
               disabled={addingToWishlist}
             >
-              {addingToWishlist 
-                ? 'Updating...' 
-                : isInWishlist 
-                  ? '♥ In Wishlist' 
-                  : '♡ Add to Wishlist'
+              {addingToWishlist
+                ? 'Updating...'
+                : isInWishlist
+                  ? <><Heart size={16} fill="currentColor" /> In Wishlist</>
+                  : <><Heart size={16} /> Add to Wishlist</>
               }
             </button>
           </div>
@@ -589,7 +589,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
           {!isAuthenticated && (
             <div className="auth-prompt">
               <p>
-                <button 
+                <button
                   className="sign-in-link"
                   onClick={signInAsGuest}
                 >

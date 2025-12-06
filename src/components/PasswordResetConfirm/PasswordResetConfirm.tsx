@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import { useNotification } from '../../hooks/useNotification';
-import { UserFriendlyError } from '../../types';
 import LoadingIndicator from '../LoadingIndicator';
 import './PasswordResetConfirm.css';
 
@@ -66,14 +65,14 @@ export const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ clas
       setFormState(prev => ({ ...prev, isVerifying: false }));
     } catch (error: any) {
       console.error('Error verifying reset code:', error);
-      
+
       let errorMessage = 'Invalid or expired password reset link';
       if (error.code === 'auth/expired-action-code') {
         errorMessage = 'This password reset link has expired. Please request a new one.';
       } else if (error.code === 'auth/invalid-action-code') {
         errorMessage = 'This password reset link is invalid. Please request a new one.';
       }
-      
+
       setErrors({ general: errorMessage });
       setFormState(prev => ({ ...prev, isVerifying: false }));
     }
@@ -131,10 +130,10 @@ export const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ clas
       // Confirm password reset with Firebase
       await confirmPasswordReset(auth, resetCode, formState.newPassword);
 
-      setFormState(prev => ({ 
-        ...prev, 
-        isLoading: false, 
-        isCompleted: true 
+      setFormState(prev => ({
+        ...prev,
+        isLoading: false,
+        isCompleted: true
       }));
 
       showSuccess(
@@ -153,7 +152,7 @@ export const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ clas
 
     } catch (error: any) {
       console.error('Error resetting password:', error);
-      
+
       let errorMessage = 'Failed to reset password. Please try again.';
       if (error.code === 'auth/weak-password') {
         errorMessage = 'Password is too weak. Please choose a stronger password.';

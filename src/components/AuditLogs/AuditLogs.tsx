@@ -22,11 +22,11 @@ export const AuditLogs: React.FC<AuditLogsProps> = ({ className = '' }) => {
     hasMore: true,
     loading: false
   });
-  
-  const [filters, setFilters] = useState<LogFilters>({
+
+  const [filters] = useState<LogFilters>({
     limit: 20
   });
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAction, setSelectedAction] = useState<string>('');
   const [selectedTargetType, setSelectedTargetType] = useState<string>('');
@@ -34,7 +34,7 @@ export const AuditLogs: React.FC<AuditLogsProps> = ({ className = '' }) => {
     startDate: '',
     endDate: ''
   });
-  
+
   const [exportLoading, setExportLoading] = useState(false);
   const { showError, showSuccess } = useNotification();
 
@@ -65,8 +65,8 @@ export const AuditLogs: React.FC<AuditLogsProps> = ({ className = '' }) => {
     } catch (error) {
       console.error('Error loading audit logs:', error);
       showError(
-        error instanceof UserFriendlyError 
-          ? error.userMessage 
+        error instanceof UserFriendlyError
+          ? error.userMessage
           : 'Failed to load audit logs'
       );
       setPagination(prev => ({ ...prev, loading: false }));
@@ -93,7 +93,7 @@ export const AuditLogs: React.FC<AuditLogsProps> = ({ className = '' }) => {
     setSelectedTargetType('');
     setDateRange({ startDate: '', endDate: '' });
     setPagination(prev => ({ ...prev, logs: [], lastDoc: undefined }));
-    
+
     // Load logs with default filters
     setTimeout(() => loadLogs(true), 0);
   }, [loadLogs]);
@@ -102,7 +102,7 @@ export const AuditLogs: React.FC<AuditLogsProps> = ({ className = '' }) => {
   const exportLogs = useCallback(async () => {
     try {
       setExportLoading(true);
-      
+
       const appliedFilters: LogFilters = {
         action: selectedAction || undefined,
         targetType: selectedTargetType as any || undefined,
@@ -112,10 +112,10 @@ export const AuditLogs: React.FC<AuditLogsProps> = ({ className = '' }) => {
       };
 
       const logs = await adminService.getAdminLogs(appliedFilters);
-      
+
       // Convert to CSV
       const csvContent = convertLogsToCSV(logs);
-      
+
       // Download file
       const blob = new Blob([csvContent], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
@@ -126,13 +126,13 @@ export const AuditLogs: React.FC<AuditLogsProps> = ({ className = '' }) => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
+
       showSuccess('Audit logs exported successfully');
     } catch (error) {
       console.error('Error exporting audit logs:', error);
       showError(
-        error instanceof UserFriendlyError 
-          ? error.userMessage 
+        error instanceof UserFriendlyError
+          ? error.userMessage
           : 'Failed to export audit logs'
       );
     } finally {
@@ -152,7 +152,7 @@ export const AuditLogs: React.FC<AuditLogsProps> = ({ className = '' }) => {
       JSON.stringify(log.changes),
       log.ipAddress
     ]);
-    
+
     return [headers, ...rows]
       .map(row => row.map(field => `"${field}"`).join(','))
       .join('\n');
@@ -161,7 +161,7 @@ export const AuditLogs: React.FC<AuditLogsProps> = ({ className = '' }) => {
   // Filter logs by search query (client-side filtering for loaded logs)
   const filteredLogs = pagination.logs.filter(log => {
     if (!searchQuery) return true;
-    
+
     const query = searchQuery.toLowerCase();
     return (
       log.action.toLowerCase().includes(query) ||
@@ -189,7 +189,7 @@ export const AuditLogs: React.FC<AuditLogsProps> = ({ className = '' }) => {
     if (!changes || Object.keys(changes).length === 0) {
       return 'No changes recorded';
     }
-    
+
     return Object.entries(changes)
       .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
       .join(', ');
@@ -198,6 +198,7 @@ export const AuditLogs: React.FC<AuditLogsProps> = ({ className = '' }) => {
   // Load initial data
   useEffect(() => {
     loadLogs(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

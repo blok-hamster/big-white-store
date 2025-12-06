@@ -73,7 +73,6 @@ class AdminErrorBoundary extends Component<Props, State> {
     // Example: Send to monitoring service
     // errorMonitoringService.captureException(errorReport);
     
-    console.log('Error report prepared for monitoring service:', errorReport);
   }
 
   private handleRetry = () => {

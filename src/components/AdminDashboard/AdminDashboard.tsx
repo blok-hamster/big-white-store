@@ -18,6 +18,7 @@ const ProductManagement = React.lazy(() => import('../ProductManagement/ProductM
 const CategoryManagement = React.lazy(() => import('../CategoryManagement/CategoryManagement'));
 const UserManagement = React.lazy(() => import('../UserManagement/UserManagement'));
 const AuditLogs = React.lazy(() => import('../AuditLogs/AuditLogs'));
+const OrderManagement = React.lazy(() => import('../OrderManagement/OrderManagement'));
 
 interface AdminDashboardProps {
   user: User;
@@ -32,7 +33,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = React.memo(({ user, onSign
   const navigate = useNavigate();
   const location = useLocation();
   const { showSuccess, showError } = useNotification();
-  
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -40,7 +41,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = React.memo(({ user, onSign
   const showErrorRef = useRef(showError);
   const navigateRef = useRef(navigate);
   // Removed hasCheckedRef - relying on AuthService caching instead
-  
+
   // Update refs when functions change
   showErrorRef.current = showError;
   navigateRef.current = navigate;
@@ -49,9 +50,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = React.memo(({ user, onSign
   useEffect(() => {
     let isMounted = true;
     const currentUserId = user?.uid;
-    
-    console.log('AdminDashboard useEffect triggered for user:', currentUserId);
-    
+
+
     // Early return if no user
     if (!currentUserId) {
       navigateRef.current('/admin/signin');
@@ -60,35 +60,30 @@ const AdminDashboard: React.FC<AdminDashboardProps> = React.memo(({ user, onSign
 
     const checkAdminAccess = async () => {
       if (!isMounted) return;
-      
+
       try {
-        console.log('AdminDashboard: Starting admin check');
         setIsLoading(true);
-        
+
         const isAdmin = await authService.isAdmin();
-        console.log('AdminDashboard: isAdmin result:', isAdmin);
-        
+
         if (!isMounted) return;
-        
+
         if (!isAdmin) {
-          console.log('AdminDashboard: Not admin, redirecting');
           showErrorRef.current('Admin access required. Please contact an administrator.', 5000);
           navigateRef.current('/admin/signin');
           return;
         }
 
-        console.log('AdminDashboard: Setting authorized');
         setIsAuthorized(true);
         setShowOnboarding(true);
       } catch (error) {
         if (!isMounted) return;
-        
+
         console.error('AdminDashboard: Error during admin access check:', error);
         showErrorRef.current('Failed to verify admin access. Please try again.', 5000);
         navigateRef.current('/admin/signin');
       } finally {
         if (isMounted) {
-          console.log('AdminDashboard: Setting loading false');
           setIsLoading(false);
         }
       }
@@ -192,74 +187,86 @@ const AdminDashboard: React.FC<AdminDashboardProps> = React.memo(({ user, onSign
           <div className="content-wrapper">
             <Routes>
               {/* Dashboard Overview */}
-              <Route 
-                path="/" 
+              <Route
+                path="/"
                 element={
                   <AdminErrorBoundary>
                     <DashboardOverview onError={handleComponentError} />
                   </AdminErrorBoundary>
-                } 
+                }
               />
-              <Route 
-                path="/dashboard" 
+              <Route
+                path="/dashboard"
                 element={
                   <AdminErrorBoundary>
                     <DashboardOverview onError={handleComponentError} />
                   </AdminErrorBoundary>
-                } 
+                }
               />
 
               {/* Products Management */}
-              <Route 
-                path="/products" 
+              <Route
+                path="/products"
                 element={
                   <AdminErrorBoundary>
                     <React.Suspense fallback={<LoadingIndicator />}>
                       <ProductManagement onError={handleComponentError} />
                     </React.Suspense>
                   </AdminErrorBoundary>
-                } 
+                }
               />
 
               {/* Categories Management */}
-              <Route 
-                path="/categories" 
+              <Route
+                path="/categories"
                 element={
                   <AdminErrorBoundary>
                     <React.Suspense fallback={<LoadingIndicator />}>
                       <CategoryManagement onError={handleComponentError} />
                     </React.Suspense>
                   </AdminErrorBoundary>
-                } 
+                }
               />
 
               {/* Users Management */}
-              <Route 
-                path="/users" 
+              <Route
+                path="/users"
                 element={
                   <AdminErrorBoundary>
                     <React.Suspense fallback={<LoadingIndicator />}>
                       <UserManagement onError={handleComponentError} />
                     </React.Suspense>
                   </AdminErrorBoundary>
-                } 
+                }
+              />
+
+              {/* Orders Management */}
+              <Route
+                path="/orders"
+                element={
+                  <AdminErrorBoundary>
+                    <React.Suspense fallback={<LoadingIndicator />}>
+                      <OrderManagement onError={handleComponentError} />
+                    </React.Suspense>
+                  </AdminErrorBoundary>
+                }
               />
 
               {/* Audit Logs */}
-              <Route 
-                path="/logs" 
+              <Route
+                path="/logs"
                 element={
                   <AdminErrorBoundary>
                     <React.Suspense fallback={<LoadingIndicator />}>
                       <AuditLogs />
                     </React.Suspense>
                   </AdminErrorBoundary>
-                } 
+                }
               />
 
               {/* Profile Settings */}
-              <Route 
-                path="/profile" 
+              <Route
+                path="/profile"
                 element={
                   <AdminErrorBoundary>
                     <div className="placeholder-section">
@@ -267,12 +274,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = React.memo(({ user, onSign
                       <p>Profile settings interface will be implemented in a future task.</p>
                     </div>
                   </AdminErrorBoundary>
-                } 
+                }
               />
 
               {/* Preferences */}
-              <Route 
-                path="/preferences" 
+              <Route
+                path="/preferences"
                 element={
                   <AdminErrorBoundary>
                     <div className="placeholder-section">
@@ -280,7 +287,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = React.memo(({ user, onSign
                       <p>Preferences interface will be implemented in a future task.</p>
                     </div>
                   </AdminErrorBoundary>
-                } 
+                }
               />
 
               {/* Default redirect to dashboard */}

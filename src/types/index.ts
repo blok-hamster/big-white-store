@@ -67,6 +67,37 @@ export interface InventoryUpdate {
   timestamp?: Date;
 }
 
+export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+
+export interface OrderItem {
+  productId: string;
+  productName: string;
+  productImage: string;
+  selectedSize: string;
+  selectedColor: string;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  id: string;
+  userId: string;
+  items: OrderItem[];
+  totalAmount: number;
+  status: OrderStatus;
+  shippingDetails: {
+    fullName: string;
+    email: string;
+    address: string;
+    city: string;
+    zipCode: string;
+    phone: string;
+  };
+  paymentReference: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export class UserFriendlyError extends Error {
   public userMessage: string;
 

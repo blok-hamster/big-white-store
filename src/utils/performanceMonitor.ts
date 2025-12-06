@@ -194,7 +194,6 @@ class PerformanceMonitor {
     console.group('🚀 Performance Report');
     
     if (Object.keys(report.averages).length === 0) {
-      console.log('No performance metrics recorded');
       console.groupEnd();
       return;
     }
@@ -205,9 +204,6 @@ class PerformanceMonitor {
     for (const [name, metrics] of this.metrics.entries()) {
       if (metrics.length > 0) {
         console.group(`${name} (${metrics.length} samples)`);
-        console.log(`Average: ${report.averages[name]?.toFixed(2)}ms`);
-        console.log(`Fastest: ${report.fastest[name]?.duration?.toFixed(2)}ms`);
-        console.log(`Slowest: ${report.slowest[name]?.duration?.toFixed(2)}ms`);
         console.groupEnd();
       }
     }

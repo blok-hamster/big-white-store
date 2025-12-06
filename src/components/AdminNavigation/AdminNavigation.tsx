@@ -65,6 +65,14 @@ const AdminNavigation: React.FC<AdminNavigationProps> = React.memo(({
       permissions: ['read:categories']
     },
     {
+      id: 'orders',
+      name: 'Orders',
+      path: '/admin/orders',
+      icon: '🛒',
+      description: 'Manage customer orders',
+      permissions: ['read:orders']
+    },
+    {
       id: 'users',
       name: 'Users',
       path: '/admin/users',
@@ -113,7 +121,7 @@ const AdminNavigation: React.FC<AdminNavigationProps> = React.memo(({
 
   const handleNavigationClick = useCallback((section: NavigationSection) => {
     navigate(section.path);
-    
+
     // Close mobile menu if open
     if (isMobileMenuOpen && onMobileMenuToggle) {
       onMobileMenuToggle();
@@ -134,8 +142,8 @@ const AdminNavigation: React.FC<AdminNavigationProps> = React.memo(({
   }, [onSignOut]);
 
   const isActiveSection = useCallback((sectionPath: string): boolean => {
-    return location.pathname === sectionPath || 
-           (sectionPath === '/admin/dashboard' && location.pathname === '/admin');
+    return location.pathname === sectionPath ||
+      (sectionPath === '/admin/dashboard' && location.pathname === '/admin');
   }, [location.pathname]);
 
   const handleHelpToggle = useCallback(() => {
@@ -146,7 +154,7 @@ const AdminNavigation: React.FC<AdminNavigationProps> = React.memo(({
     <>
       {/* Mobile menu overlay */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="mobile-menu-overlay"
           onClick={onMobileMenuToggle}
         />
@@ -160,10 +168,10 @@ const AdminNavigation: React.FC<AdminNavigationProps> = React.memo(({
             <span className="logo-icon">⚙️</span>
             <h2>Admin Panel</h2>
           </div>
-          
+
           {/* Mobile close button */}
           {isMobileMenuOpen && (
-            <button 
+            <button
               className="mobile-close-button"
               onClick={onMobileMenuToggle}
               aria-label="Close navigation menu"
@@ -186,7 +194,7 @@ const AdminNavigation: React.FC<AdminNavigationProps> = React.memo(({
               <span className="nav-label">{section.name}</span>
             </button>
           ))}
-          
+
           {/* Help button */}
           <button
             className="nav-section help-section"
@@ -208,8 +216,8 @@ const AdminNavigation: React.FC<AdminNavigationProps> = React.memo(({
               aria-label="User profile menu"
             >
               <div className="user-avatar">
-                {userProfile?.displayName?.charAt(0).toUpperCase() || 
-                 user.email?.charAt(0).toUpperCase() || '?'}
+                {userProfile?.displayName?.charAt(0).toUpperCase() ||
+                  user.email?.charAt(0).toUpperCase() || '?'}
               </div>
               <div className="user-info">
                 <span className="user-name">
@@ -227,14 +235,14 @@ const AdminNavigation: React.FC<AdminNavigationProps> = React.memo(({
             {/* Profile dropdown menu */}
             {isProfileDropdownOpen && (
               <div className="profile-dropdown-menu">
-                <button 
+                <button
                   className="dropdown-item"
                   onClick={() => navigate('/admin/profile')}
                 >
                   <span className="dropdown-icon">👤</span>
                   Profile Settings
                 </button>
-                <button 
+                <button
                   className="dropdown-item"
                   onClick={() => navigate('/admin/preferences')}
                 >
@@ -242,7 +250,7 @@ const AdminNavigation: React.FC<AdminNavigationProps> = React.memo(({
                   Preferences
                 </button>
                 <div className="dropdown-divider" />
-                <button 
+                <button
                   className="dropdown-item sign-out"
                   onClick={handleSignOut}
                 >
@@ -256,7 +264,7 @@ const AdminNavigation: React.FC<AdminNavigationProps> = React.memo(({
       </nav>
 
       {/* Help System */}
-      <AdminHelpSystem 
+      <AdminHelpSystem
         isOpen={isHelpOpen}
         onClose={() => setIsHelpOpen(false)}
       />

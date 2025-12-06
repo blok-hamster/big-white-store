@@ -32,9 +32,18 @@ const DatabaseSeeder: React.FC<DatabaseSeederProps> = ({ onClose }) => {
         await dataSeeder.seedAll();
       }
 
-      setSeedingStep('Seeding completed successfully!');
+      // Clear cache to ensure new data is loaded
+      localStorage.removeItem('product-catalog-cache');
+
+      setSeedingStep('Seeding completed successfully! Reloading...');
       setSeedingComplete(true);
       showSuccess('Database seeded successfully!');
+
+      // Reload page to fetch new data
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+
     } catch (error: any) {
       console.error('Seeding error:', error);
       showError(error.message || 'Failed to seed database');
@@ -56,13 +65,13 @@ const DatabaseSeeder: React.FC<DatabaseSeederProps> = ({ onClose }) => {
       ]);
 
       setSeedingStep('Status check completed');
-      
+
       const statusMessage = `
         Super Admin: ${superAdminExists ? '✅ Exists' : '❌ Missing'}
         Categories: ${categoriesExist ? '✅ Exists' : '❌ Missing'}
         Products: ${productsExist ? '✅ Exists' : '❌ Missing'}
       `;
-      
+
       showSuccess(statusMessage);
     } catch (error: any) {
       console.error('Status check error:', error);

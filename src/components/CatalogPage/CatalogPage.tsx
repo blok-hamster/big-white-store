@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { FilterProvider } from '../../contexts/FilterContext';
 import CategoryNavigation from '../CategoryNavigation/CategoryNavigation';
 import ProductListing from '../ProductListing/ProductListing';
@@ -20,7 +20,6 @@ const CatalogPage: React.FC<CatalogPageProps> = ({ className = '' }) => {
     categoryId?: string;
     subcategoryId?: string;
   }>();
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,15 +33,15 @@ const CatalogPage: React.FC<CatalogPageProps> = ({ className = '' }) => {
         setLoading(true);
         const fetchedCategories = await categoryService.getCategories();
         setCategories(fetchedCategories);
-        
+
         // Find selected category
         if (categoryId) {
-          const category = fetchedCategories.find(cat => 
+          const category = fetchedCategories.find(cat =>
             cat.id === categoryId || cat.name.toLowerCase() === categoryId.toLowerCase()
           );
           setSelectedCategory(category || null);
         }
-        
+
         setLoading(false);
       } catch (err) {
         console.error('Error loading categories:', err);
